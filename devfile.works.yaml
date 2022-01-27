@@ -1,0 +1,51 @@
+schemaVersion: 2.1.0
+metadata:
+  name: devfile-test
+components:
+
+  # Development Tooling
+  - name: nodejsdev
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-b452131
+      endpoints:
+        - exposure: public
+          name: nodejs
+          protocol: http
+          targetPort: 3000
+      memoryLimit: 1G
+      mountSources: true
+
+  # PostgreSQL Database
+  - name: db-service
+    container:
+      image: "bitnami/postgresql:12.5.0"
+      env:
+        - value: root
+          name: POSTGRES_USER
+        - value: password
+          name: POSTGRES_PASSWORD
+      volumeMounts:
+        - name: data-db
+          path: /bitnami/postgresql
+      memoryLimit: 256Mi
+      endpoints:
+        - exposure: internal
+          name: postgres
+          protocol: tcp
+          targetPort: 5432
+
+  # Grafana
+  - name: logging-grafana
+    container:
+      image: "grafana/grafana:7.5.4"
+      env:
+        - value: "4900"
+          name: GF_SERVER_HTTP_PORT
+        - value: "http://localhost:4910"
+          name: LOKI_URL
+      memoryLimit: 512Mi
+ 
+  # volumes
+  - name: data-db
+    volume:
+      size: 2Gi
