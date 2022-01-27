@@ -50,17 +50,6 @@ components:
           protocol: http
           targetPort: 4900
 
-  # Grafana Loki
-  - name: logging-grafana-loki
-    container:
-      image: "grafana/loki:2.2.1"
-      memoryLimit: 512Mi
-      endpoints:
-        - exposure: internal
-          name: grafana-loki
-          protocol: http
-          targetPort: 4910
-
   # volumes
   - name: data-db
     volume:
